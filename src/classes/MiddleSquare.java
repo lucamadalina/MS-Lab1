@@ -63,7 +63,7 @@ public class MiddleSquare implements IGenerator {
     }
 
     @Override
-    public float  nextInt(){
+    public float nextInt(){
         float result;
         int p;
         int x;

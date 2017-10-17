@@ -1,9 +1,11 @@
 package classes;
 
+import interfaces.IGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lcg {
+public class Lcg implements IGenerator{
 
     int a;
     int b ;
@@ -11,7 +13,7 @@ public class Lcg {
     int x;
     List<Double> list = new ArrayList<>();
 
-    public int countNumber(int number){
+    private int countNumber(int number){
         int i = 0;
         while(number != 0){
             number =  number/10;
@@ -26,13 +28,13 @@ public class Lcg {
         this.m = m;
     }
 
-    double generateNumber() {
+    private float generateNumber() {
         x = (a * x + b) % m;
-        return x/Math.pow(10, countNumber(x));
+        return ((float) (x/Math.pow(10, countNumber(x))));
     }
-
-    double nextInt(){
-        double x = generateNumber();
+    @Override
+    public float nextInt(){
+        float x = generateNumber();
         while(add(x) == true || x == 0.0) {
             setM(++m);
             x = generateNumber();
@@ -55,7 +57,7 @@ public class Lcg {
         }
     }
 
-    public void setM(int m) {
+    private void setM(int m) {
         this.m = m;
     }
 }
