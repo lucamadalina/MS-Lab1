@@ -3,6 +3,7 @@ package classes;
 import interfaces.IGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Lcg implements IGenerator{
@@ -11,7 +12,7 @@ public class Lcg implements IGenerator{
     int b ;
     static int m ;
     int x;
-    List<Double> list = new ArrayList<>();
+    public static List<Double> list = new ArrayList<>();
 
     private int countNumber(int number){
         int i = 0;
@@ -33,7 +34,7 @@ public class Lcg implements IGenerator{
         return ((float) (x/Math.pow(10, countNumber(x))));
     }
     @Override
-    public float nextInt(){
+    public float nextFloat(){
         float x = generateNumber();
         while(add(x) == true || x == 0.0) {
             setM(++m);
@@ -60,4 +61,32 @@ public class Lcg implements IGenerator{
     private void setM(int m) {
         this.m = m;
     }
-}
+
+    public HashMap<Float, Integer> getList(){
+        HashMap<Float, Integer> map = new HashMap<>();
+        for (float i = 0; i <= 1; i = (float) (i + 0.1)) {
+            map.put(i, 1);
+        }
+            for(int j=0; j<100; j++) {
+                float nr = nextFloat();
+                for (float i = 0; i <= 1; i = (float) (i + 0.1)) {
+                    float key = i;
+                    if (nr > key && nr < key+0.1) {
+                        map.put(key, map.get(key) + 1);
+                    }
+                }
+            }
+         return map;
+        }
+
+    public HashMap<Float, Float> get(){
+        HashMap<Float, Float> map = new HashMap<>();
+        for(int j=0; j<100; j++) {
+            float nr = nextFloat();
+            float nr2 = nextFloat();
+            map.put(nr, nr2);
+        }
+        return map;
+    }
+    }
+

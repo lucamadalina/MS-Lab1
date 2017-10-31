@@ -6,21 +6,26 @@ package classes;
 
 import interfaces.IGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MiddleSquare implements IGenerator {
-    private int seed;
-    private static List<Integer> list = new ArrayList<>();
+    private static int seed;
+    public static Map<Integer, Integer> list = new HashMap<>();
+    private int countSeed;
+
 
     public void setSeed(int seed) {
         this.seed = seed;
     }
+
     //or
     MiddleSquare(int seed){
         this.seed = seed;
+        countSeed = countNumber(seed);
     }
-    public int countNumber(int seed){
+
+    public static int countNumber(int seed){
         int i=0;
         while(seed!=0){
             seed=seed/10;
@@ -29,57 +34,80 @@ public class MiddleSquare implements IGenerator {
         return i;
     }
 
-    //daca contine 0
+
     public int setValue(int n) {
-        int dif = countNumber(seed) - countNumber(n);
+        int dif = countSeed - countNumber(n);
         int count = countNumber(n);
-        if (count < countNumber(seed)) {
+        if (count < countSeed) {
             while (dif != 0) {
-                n = (int) (n + Math.pow(10, countNumber(n)));
-                dif--;
+                if (dif == 1) {
+                    n = (int) (n + Math.pow(10, countNumber(n)));
+                    dif--;
+                } else {
+                    dif--;
+                }
             }
         }
         return n;
     }
 
     private boolean duplicate(int n){
-        int i;
         boolean status = false;
-        for(i=0; i<list.size(); i++){
-            if(n == list.get(i)){
+        if(list.size() > 0){
+            if(list.get(n) != null)
                 status = true;
-            }
-            else {
-                status = false;
-                break;
-            }
         }
         if(!status){
-            list.add(n);
-            return status;
+            list.put(n, n);
+            status = false;
         }
-        else
-            return status;
+        return status;
     }
 
     @Override
-    public float nextInt(){
-        float result;
+    public float nextFloat(){
+        int result;
         int p;
         int x;
-        int count = countNumber(seed);
-        result=seed*seed;
-        p= (int) ((result/(Math.pow(10,count/2)))%(Math.pow(10,count)));
+        result = seed*seed;
+        p= (int) ((result/(Math.pow(10,countSeed/2)))%(Math.pow(10,countSeed)));
         if(p == 0) {
             p=1;
         }
         x = setValue(p);
         if (duplicate(x) == false) {
-            return (float) (x / Math.pow(10, count));
+            seed = x ;
+            return (float) (seed/ Math.pow(10, countSeed));
         }
         else {
-            return (float)((x+171)/Math.pow(10, count));
+            seed = x+2;
+            return (float)(seed/ Math.pow(10, countSeed));
         }
+    }
+    public HashMap<Float, Integer> getList(){
+        HashMap<Float, Integer> map = new HashMap<>();
+        for (float i = 0; i <= 1; i = (float) (i + 0.1)) {
+            map.put(i, 1);
+        }
+        for(int j=0; j<100; j++) {
+            float nr = nextFloat();
+            for (float i = 0; i <= 1; i = (float) (i + 0.1)) {
+                float key = i;
+                if (nr > key && nr < key+0.1) {
+                    map.put(key, map.get(key) + 1);
+                }
+            }
+        }
+        return map;
+    }
+    public HashMap<Float, Float> get(){
+        HashMap<Float, Float> map = new HashMap<>();
+        for(int j=0; j<1000; j++) {
+            float nr = nextFloat();
+            float nr2 = nextFloat();
+            map.put(nr, nr2);
+        }
+        return map;
     }
 }
 
